@@ -1,6 +1,8 @@
 ﻿
-# forked from https://www.alitajran.com
+# script to add bulk users with a .csv file into AD
+  
 # import module
+
 Import-Module ActiveDirectory
 
 # store the data into a var
