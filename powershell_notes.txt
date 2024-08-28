@@ -1,0 +1,481 @@
+=============================================================
+Powershell scriptng
+=============================================================
+
+
+https://f.hubspotusercontent20.net/hubfs/4890073/PowerShell%20for%20Beginners%20eBook.pdf
+
+
+cmdlet - is a command to perform an action
+
+> Get-Command *phrase*
+	to find all available cmdlets
+
+> Get-Help cmdlet
+
+Varibles 
+--------
+
+any character that has a symbol '$' becomes a varible 
+
+	ex
+	> $a = 10
+	> $b = 6
+	> $a+$b
+	  16
+
+Data types
+----------
+
+Types include integers, floating point values, strings, 
+	booleans, and datetime
+
+use GetType to get the current data type of a varible 
+
+	ex 
+	> $a.GetType()
+
+varibles may be converted from one type to another by explicit
+	conversion
+
+	> $a=1.9
+	> [int32]$a
+	  2
+	> [float]$a
+	  1.9
+		etc, etc
+
+Arrays
+------
+
+arrays are used to contain a list of values
+powershell arrays are defined by wrapping a list of items
+in paratheses and prefacing with @
+
+> $nameArray = @("bobbie","bob","dumb")
+
+	you can call them with square brackets, starting at 0
+
+> $nameArray[0]  > $nameArray[2]
+  bobbie		 dumb
+
+Hashtable
+---------
+
+a more advanced array is a hashtable
+	assigned with {} and prefaced with @
+items within a hashtable are named rather than assigned 
+	numerical values
+
+> $user=@{FirstName="bobbie"; LastName="dumb"; MiddleInitial="a"; Age=38}
+
+> $user.FirstName		> $user.lastname
+  bobbie			   dumb	
+
+you can store multiple values in each column 
+	ex > $user=@{FirstName="bobbie","bob","dumb"}
+
+> $user.FirstName
+  bobbie
+  bob
+  dumb
+
+Practice
+define the tables 
+> $info1=@{name="bob","tony","joe";daysworked=12,20,18}
+> $info2=@{name="bob","tony","joe";pay=100,120,150}
+times days worked by pay for each
+> $bobSalary = $info1.daysworked[0] * $info2.pay[0] 
+> $tonySalary = $info1.daysworked[1] * $info2.pay[1]
+> $joeSalary = $info1.daysworked[2] * $info2.pay[2]
+new table
+> $info3=@{name=$info1.name[0],name=$info1.name[1],name=$info1.name[2]; Salary=$bobSalary,$tonySalary,$joeSalary}
+> $info3
+
+wildcards
+---------
+
+* will match zero or more characters 
+? will match a single character
+
+use | to pipe the results of the preceding command to the 
+	next command
+
+Format list, table, select/select object
+----------------------------------------
+
+Sometimes all the info doesnt show up automatically 
+to retrieve it use the format-list or fl command
+
+> Get-Date 
+	just the date/time
+> Get-Date | fl		(or use 'Format-List')
+	alot more info!
+
+add a wild
+format-List show only a default view, if you wanna view al the attributes 
+	add a wildcard
+
+> Get-Service BITS | Format-List *
+> Get-Service BITS | Format-List *name*
+
+or have it show up in a table?
+
+> Get-Service BITS | Format-Table 
+
+or 'Auto' for trunceted also use -Autosize or -Auto
+
+> Get-Service BITS | Format-Table -AutoSize
+
+Sort based on an attribute use a wildcard
+
+> Get-Service a*
+> Get-Service a* | Sort-Object Status
+
+to use information provided by a command use ‘Select or Select-Object’
+
+> Get-Service Eventlog
+	views eventlog service
+> Get-Service Eventlog | fl
+	views eventlog list
+> $service = Get-Service Eventlog | Select Name, Status
+	create $service with name and status inside
+$ $service
+	prints event logs name and status
+
+Read/Write-host
+---------------
+
+Read-Host - lets you ask a question to the user that can be 
+	used as a varible 
+
+Write-Host - is used to display information in the console
+	like echo 
+
+Print a question from $name, now name now = the answer provided
+$name = Read-Host "What is your name"
+Write-Host "My name is : "$name -ForegroundColor Green 
+
+if/then operators
+------------------
+
+comparison operators
+
+"-eq" Equal
+"-ne" Not equal
+"-ge" Greater than or equal
+"-gt" Greater than
+"-lt" Less than
+"-le" Less than or equal
+"-like" Wildcard comparison
+"-notlike" Wildcard comparison
+"-match" Regular expression comparison
+"-notmatch" Regular expression comparison
+"-replace" Replace operator
+"-contains" Containment operator
+"-notcontains" Containment operator
+"-shl" Shift bits left (PowerShell 3.0)
+"-shr" Shift bits right – preserves sign for signed values.(PowerShell 3.0)
+"-in" Like –contains, but with the operands reversed.(PowerShell 3.0)
+"-notin" Like –notcontains, but with the operands reversed.(PowerShell 3.0)
+
+all operators are not case sensitive by default 
+to make them case sensitve perface 'c'
+	ex -eg to -ceg
+
+Comparison of types 
+
+"-is" Is of a type
+"-isnot" Is not of a type
+"-as" As a type, no error if conversion fails
+
+Logical Operators
+
+"-and" Logical And
+"-or" Logical Or
+"-not" logical not
+"!" logical not
+
+example 
+-------
+
+$service = Get-Service Spooler | Select Status
+
+if($service.Status -eq "Running")
+	{
+	 Write-Host "Service is good" -ForegroundColor Green
+	}
+	 elseif($service.status -eq "Stopped")
+	{
+	  Write-Host "Service is down" -ForegroundColor Red
+	}
+
+first it saves the status of the spooler to $service
+then if it reads running it prints service is good or goes
+to the next line
+
+Loops
+-----
+
+ForEach()
+ ex you need to find the status of a few service stored in a txt/csv file
+
+$result = @()	# empty table to store the info
+$service = Get-Content C:\Temp\Services.txt # where the list is
+    foreach($s in services)
+	{
+	 $data = $null
+	 $data = Get-Service $s | Select Name.status
+	 $result += $data
+	}
+
+$result
+
+first it saves the list of data that must be worked on in an 
+	array
+	we used the cmdlet 'Get-Content' and saved it in an 
+	array '$services'
+
+foreach($s in $services)
+	the $s is a temporary varible followed by the operator 
+	'in' and then the array '$services'
+
+another way to write the foreach loop is
+
+$result = @() ## Empty table to store the
+information
+$services = Get-Content C:\Temp\Services.txt ## List of services whose status has ## to be checked
+$services | foreach{
+	Write-Host "Checking status of service : "$_ 
+	$data = $null 
+	$data = Get-Service $_ | Select Name,Status 
+	$result += $data
+}
+$result
+
+ this one above makes use of the pipeline var $_
+
+for loop
+--------
+
+a loop in case you need a counter: 
+
+for($i = 1 ; $i -le 10 ; $i++)
+  {
+  Write-Host "Current value : "$i -ForegroundColor Green
+  }
+
+the for contains three parts seperated by a semicolon
+
+$i = 1   - the initiation for where the loop should start
+	 
+$i -le 10  - the condition that is checked after the first part
+	is completed, if tru the code executes 
+
+$i++  - once the code has been executed, it will be incremented 
+	which will update $i to 2
+
+While Loop
+----------
+
+The while statement runs a statement list zero or more times 
+based on the results of a conditional test
+
+ex 
+> while(Get-Service Fax | ?{$_.status -eq "Stopped"})
+	{
+	    Write-Host "Stopped" -ForeGroundColor Red
+	    Start-Sleep - Seconds 2
+	}
+
+		# once the status changes from stopped the loop 
+		will stop as well
+
+Do Until Loop
+-------------
+
+a do untill will execute at least once before validating the condition
+ pretty much a do while excepts it runs once at least 
+
+other important statements for loops 
+
+-Continue
+
+$processes = Get-Process
+foreach($process in $processes)
+{
+ Write-Host "Process : "$process -ForegroundColor Yellow
+ if($process.PM / 1024 / 1024 -le 100)
+ {
+ continue
+ }
+ Write-Host ('Process ' + $process.Name + ' is using more than 100 MB RAM.') -
+ForegroundColor Green
+
+	runs the loop unntill the useage of ram is higher 
+	than 100mb then prints the error
+
+-Break
+The break statement causes Windows to
+immediately exit the innermost While, Do,
+For, or ForEach loop or Switch code block
+
+-Exit
+Exit causes Windows PowerShell to exit a 
+script or a Windows PowerShell instance.
+	
+Where
+-----
+
+used to look for information that is being passed/provided by 
+the previous command
+
+Example 
+
+> Get-Service | where{$_.status -eq "Stopped"}
+	focus on services that are stopped 
+
+> Get-Service | where{$_.status -eq "Stopped" -and $_.name -like "A*"}
+
+you can use ? in place of where
+
+Switch
+------
+
+the switch command is generaly preferred when you must perform 
+an action based on a list 
+you can also use multiple ifs and elses but its easier with 
+	a switch 
+
+ex
+
+Write-Host "Check Service Status" -ForegroundColor Green
+Write-Host "1: Check status of Windows Audio service" -ForegroundColor Yellow
+Write-Host "2: Check status of Print Spooler service" -ForegroundColor Yellow
+Write-Host "3: Check status of Netlogon service" -ForegroundColor Yellow
+$choice = Read-Host "Please enter your choice"
+switch($choice)
+ {
+   1
+     {
+ 	 Get-Service Audiosrv
+     }
+   2
+      {
+       Get-Service Spooler
+     }
+    3
+       {
+       Get-Service Netlogon
+     }
+ } 
+
+the above gives you options in the form of a menu to chose from 
+use write host to request info and the var is stored in 
+readhost
+
+Functions
+---------
+
+Functions can make scripts a bit more streamlined (put in beginging)) 
+
+ex 
+function hi
+  {
+    Write-Host "hi my name is bobbie" -ForeGroundColor Green
+    Write-Host "my body smells dingy" -ForeGroundColor Red
+    Write-Host "but at least i made it to work" -ForeGroundColor Yellow
+  }
+
+then just run 
+ > function hi
+
+make it usable and more generic
+
+function hi
+  {
+    Write-Host "hi my name is $name" -ForeGroundColor Green
+    Write-Host "my body smells $smell" -ForeGroundColor Red
+    Write-Host "but at least i made it to $place" -ForeGroundColor Yellow
+  }
+
+to cal the function in a script 
+
+hi -name bobbie -smell bad
+
+what is happening when you call this functiion hi 
+
+you are passing the name 'bobbie' which gets stored in the temp
+var $name 
+and the smell 'bad' which is passed to the var $smell
+
+tips and commands
+-----------------
+
+**If you are using a tempory varible inside a loop 
+always set it to null before using it. 
+if you dont and the command fails the varible will contain the value 
+from the las iteration**
+
+--------------------------------------------------------------------------------
+
+**Get the runtime of a script:
+
+Start-Transcript
+$date = Get-Date 
+## To be used to see the total run time of the script
+<#
+ Code
+#>
+
+Write-Host "`nRun time to generate report was $(((get-date) - $date).totalseconds)
+seconds."
+
+Stop-Transcript 
+
+--------------------------------------------------------------------------------
+
+** keep track of the execution of scripts to a txt 
+
+Start-Transcript C:\Temp\Logs\Logs.txt
+<#
+ Code
+#>
+Stop-Transcript
+
+--------------------------------------------------------------------------------
+
+** When you are working on an activity in which you must perform 
+a removal action, PowerShellprompts us to confirm. If it is a bulk 
+activity, it is not feasible to provide confirmation hundreds
+of time. In this case, you can add “-confirm:$false” at the end of 
+the command through which you do not have to confirm every time.**
+
+--------------------------------------------------------------------------------
+
+**The simplest way to copy large text is to
+add “ | clip” at the end of the command and all the information 
+that gets displayed through that command gets copied on the clipboard **
+
+--------------------------------------------------------------------------------
+
+retrieve deleted users
+
+Sign into powershell as your admin account and run 
+
+Get-ADObject -Filter 'samaccountname -eq "username"' -IncludeDeletedObjects | Restore-ADObject
+
+Where username is the users name
+
+---------------------------------------------------------------------------------
+
+Copy Users memberships from to another 
+
+Get-ADUser -Identity <Temp> -Properties memberof | Select-Object -ExpandProperty memberof
+
+
+
+Get-ADUser -Identity <UserID> -Properties memberof | Select-Object -ExpandProperty memberof |  Add-ADGroupMember -Members <New UserID>
+
+
+

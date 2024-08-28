@@ -1,11 +1,12 @@
 ﻿
 # script to add bulk users with a .csv file into AD
-  
-# import module
+# csv can contain all of the attributes in $attributes ie
+# attribute = $User.username,fname,lname,initials,description,office,etc
 
+# import module
 Import-Module ActiveDirectory
 
-# store the data into a var
+# store the data 
 $newguys = Import-Csv -Path C:\powershell\adduser.csv
 
 $username = $User.username
