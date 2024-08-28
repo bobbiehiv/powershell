@@ -9,7 +9,7 @@ $newguys = Import-Csv -Path C:\powershell\adduser.csv
 $username = $User.username
 
 # Define the user Principal name
-$PN = "gaywad.com"
+$PN = "nomain.com"
 
 foreach ($User in $newguys) {
     try { 
