@@ -71,3 +71,11 @@ foreach ($User in $newguys) {
         Write-Host "Failed to create user $($User.username) - $_" -ForegroundColor Red
     }
 }
+
+
+# If error: "a template for <jobtitle> doesnt exist!".. a user name will still be created... 
+# however you can use the following 
+# Get-ADUser -Identity <UserID> -Properties memberof | Select-Object -ExpandProperty memberof |  Add-ADGroupMember -Members <New UserID>
+# where <userID> is group membership you want to copy from, 
+# and <new userID> is the username created without a template
+
