@@ -78,12 +78,11 @@ foreach ($User in $newguys) {
 
 $myEmail = "bobbiehiv@gmail.com"
 $creds = (Get-Credential -Credential $myEmail)
-$SMTP = "smtp.gmail.com"     # check $PSemailserver if in production enviroment
+$SMTP = "smtp.gmail.com"     # check for $PSemailserver 
 $To = "receiver@email.com"   # random email
 $subject = "credentials for $($User.fname) $($User.lname)"
-$port = 587
-# create a template and add credentials 
-$body = "  
+$port = 587                  # create a template and add credentials 
+$body = "                    
 
 Hey stupid, 
 
@@ -111,19 +110,17 @@ IS Technical Services
 bobbiehiv@gmail.com
 Phone:(215) 555-555 Fax:(215) 555-555"
 
-start-sleep 2 
-# the actual command
+start-sleep 2              # sleep for two seconds before running 
+                           # the actual command
 Send-MailMessage -To $To -From $myEmail -Subject $subject -Body $body -SmtpServer $SMTP -Credential $creds -UseSsl -Port $port -DeliveryNotificationOption Onsuccess
 
 <#
-
 delivery notification options: 
 None - no notifications 
 Onsuccess - notifiy if successful 
 onfailure - notify is failure 
 Delay - notify if delayed 
 Never - never 
-
 #>
 
 }
