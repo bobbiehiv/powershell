@@ -79,7 +79,7 @@ foreach ($User in $newguys) {
 $myEmail = "bobbiehiv@gmail.com"
 $creds = (Get-Credential -Credential $myEmail)
 $SMTP = "smtp.gmail.com"     # check for $PSemailserver 
-$To = "receiver@email.com"   # random email
+$To = "receiver@nothing.fake"   # not reall email
 $subject = "credentials for $($User.fname) $($User.lname)"
 $port = 587                  # create a template and add credentials 
 $body = "                    
@@ -92,7 +92,7 @@ Username:  $($User.username)
 
 Meditech Username:  $($User.username)
 
-initial password: password?
+initial password: $($User.password)
 
 Email:  $($User.username)@$PN
 
