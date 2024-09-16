@@ -84,7 +84,7 @@ $subject = "credentials for $($User.fname) $($User.lname)"
 $port = 587                  # create a template and add credentials 
 $body = "                    
 
-Hey stupid, 
+Hey User, 
 
 Below are user credentials for $($User.fname).
 
