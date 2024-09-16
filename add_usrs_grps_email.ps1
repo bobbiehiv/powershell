@@ -90,8 +90,6 @@ Below are user credentials for $($User.fname).
 
 Username:  $($User.username)
 
-Meditech Username:  $($User.username)
-
 initial password: $($User.password)
 
 Email:  $($User.username)@$PN
@@ -105,13 +103,12 @@ If you have any questions or issues, please contact our helpdesk at (215) 555-55
 Thanks,
 
 Robert Houston
-Help Desk
 IS Technical Services
 bobbiehiv@gmail.com
 Phone:(215) 555-555 Fax:(215) 555-555"
 
-start-sleep 2              # sleep for two seconds before running 
-                           # the actual command
+# start-sleep 2              # sleep for two seconds before running 
+                           # the command
 Send-MailMessage -To $To -From $myEmail -Subject $subject -Body $body -SmtpServer $SMTP -Credential $creds -UseSsl -Port $port -DeliveryNotificationOption Onsuccess
 
 <#
